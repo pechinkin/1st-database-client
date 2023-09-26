@@ -9,5 +9,11 @@
 
 int main()
 {
+    Car ex;
+    std::string x;
+    std::cout << "enter brand name: ";
+    std::cin >> x;
+    ex.SetBrand(x);
+    std::cout << "the brand is "<< ex.GetBrand() << '\n';
     return 0;
 }

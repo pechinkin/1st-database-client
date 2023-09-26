@@ -14,9 +14,32 @@ public:
     int GetPower();
     int GetLandscape();
     
-    void WriteTo(std::ostream& output) override{};
+//    void WriteTo(std::ostream& output) override;
     
-    Bike();
-    ~Bike();
 };
 
+void Bike::SetVolume(int v)
+{
+    engine_volume = v;
+};
+void Bike::SetPower(int p)
+{
+    power = p;
+};
+void Bike::SetLandscape(int l)
+{
+    landscape = l;
+};
+
+int Bike::GetVolume()
+{
+    return engine_volume;
+};
+int Bike::GetPower()
+{
+    return power;
+};
+int Bike::GetLandscape()
+{
+    return landscape;
+};
