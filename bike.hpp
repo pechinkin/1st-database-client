@@ -10,12 +10,15 @@ public:
     void SetPower(int p);
     void SetLandscape(int l);
     
-    int GetVolume();
-    int GetPower();
-    int GetLandscape();
+    int GetVolume() const;
+    int GetPower() const;
+    int GetLandscape() const;
     
 //    void WriteTo(std::ostream& output) override;
     
+    Bike();
+    Bike(std::string b, std::string m, int v, int p, int l);
+    Bike(Bike const &another);
 };
 
 void Bike::SetVolume(int v)
@@ -31,15 +34,29 @@ void Bike::SetLandscape(int l)
     landscape = l;
 };
 
-int Bike::GetVolume()
+int Bike::GetVolume() const
 {
     return engine_volume;
 };
-int Bike::GetPower()
+int Bike::GetPower() const
 {
     return power;
 };
-int Bike::GetLandscape()
+int Bike::GetLandscape() const
 {
     return landscape;
 };
+
+Bike::Bike(): Vehicle()
+{
+    engine_volume = 0;  //>0
+    power = 0;          //>0
+    landscape = 0;
+};
+Bike::Bike(std::string b, std::string m, int v, int p, int l):
+Vehicle(b, m), engine_volume{v}, power{p}, landscape{l}
+{};
+Bike::Bike(Bike const &another):
+Vehicle(another.GetBrand(), another.GetModel()), engine_volume{another.GetVolume()},
+power{another.GetPower()}, landscape{another.GetLandscape()}
+{};
