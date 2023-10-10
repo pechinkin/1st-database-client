@@ -38,6 +38,32 @@ void Client::AddElement(Vehicle &a)
     size++;
 };
 
+void Client::DeleteElement(int n)
+{
+    if (n <= size)
+    {
+        Vehicle* new_garage = new Vehicle [size - 1];
+        for (int i = 0; i != size; i++) {
+            if (i < n)
+            {
+                new_garage[i] = garage[i];
+            }
+            if (i > n)
+            {
+                new_garage[i - 1] = garage[i];
+            }
+            
+        }
+        delete[] garage;
+        garage = new_garage;
+        size --;
+    }
+    else
+    {
+        std::cout << "number is more than max elem\n";
+    }
+};
+
 void Client::ShowElements()
 {
     for (int i = 0; i != size; i++) {
