@@ -17,7 +17,13 @@ int main()
     std::cin >> x;
     ex.SetModel(x);
     Bus another(ex.GetBrand(), ex.GetModel(), 1, 1, "uo");
-    std::cout << "the brand is "<< another.GetBrand() << '\n';
+//    std::cout << "the brand is "<< another.GetBrand() << '\n';
+    
+    Client cli;
+    std::cout << cli.GetSize() << std::endl;
+    cli.AddElement(another);
 
+    std::cout << cli.GetSize() << std::endl;
+    cli.ShowElements();
     return 0;
 }
