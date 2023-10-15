@@ -9,6 +9,7 @@ public:
     void SetVolume(int v);
     void SetColor(std::string c);
     void SetGearbox(char g);
+    void SetType() override;
     
     int GetVolume() const;
     std::string GetColor() const;
@@ -33,6 +34,10 @@ void Car::SetGearbox(char g)
 {
     gearbox = g;
 };
+void Car::SetType()
+{
+    type = 'r';
+};
 
 
 int Car::GetVolume() const
@@ -53,11 +58,16 @@ Car::Car(): Vehicle()
     engine_volume = 0;  //>0
     color = "not set";
     gearbox = '-';
+    SetType();
 };
 Car::Car(std::string b, std::string m, int v, std::string c, char g):
 Vehicle(b, m), engine_volume{v}, color{c}, gearbox{g}
-{};
+{
+    SetType();
+};
 Car::Car(Car const &another):
 Vehicle(another.GetBrand(), another.GetModel()), engine_volume{another.GetVolume()},
 color{another.GetColor()}, gearbox{another.GetGearbox()}
-{};
+{
+    SetType();
+};

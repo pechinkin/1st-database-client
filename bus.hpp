@@ -10,6 +10,7 @@ public:
     void SetSittingPas(int s);
     void SetMaxPas(int m);
     void SetDestination(std::string d);
+    void SetType() override;
     
     int GetSittingPas() const;
     int GetMaxPas() const;
@@ -34,6 +35,10 @@ void Bus::SetDestination(std::string d)
 {
     destination = d;
 };
+void Bus::SetType()
+{
+    type = 's';
+};
 
 int Bus::GetSittingPas() const
 {
@@ -53,11 +58,16 @@ Bus::Bus(): Vehicle()
     sitting_pasangers = 0;  //>0
     max_passangers = 0;     //>=sitting
     destination = "not set";
+    SetType();
 };
 Bus::Bus(std::string b, std::string m, int sit, int max, std::string d):
 Vehicle(b, m), sitting_pasangers{sit}, max_passangers{max}, destination{d}
-{};
+{
+    SetType();
+};
 Bus::Bus(Bus const &another):
 Vehicle(another.GetBrand(), another.GetModel()), sitting_pasangers{another.GetSittingPas()},
 max_passangers{another.GetMaxPas()}, destination{another.GetDestination()}
-{};
+{
+    SetType();
+};

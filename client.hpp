@@ -1,76 +1,90 @@
-class Client
-{
+class Client {
 private:
-    Vehicle* garage = nullptr;
-    int size;
+    Vehicle*** garage = nullptr;
+    int size[3];
 public:
     void AddElement(Vehicle &a);
-    void DeleteElement(int n);
+    void DeleteElement(int row, int element);
     int GetSize();
-    
-//    void WriteTo(std::ostream& output) const;
+
     void RestoreFrom(std::ifstream& file_stream);
     void ShowElements();
     void Menu();
-    
+
     Client();
-//    ~Client();//should add saving to file here as well
 };
 
-Client::Client()
-{
-    size = 0;
-    garage = new Vehicle[0];
-};
-
-int Client::GetSize(){
-    return size;
-};
-
-void Client::AddElement(Vehicle &a)
-{
-    Vehicle* new_garage = new Vehicle [size + 1];
-    for (int i = 0; i != size; i++) {
-        new_garage[i] = garage[i];
+Client::Client() {
+    for (int i = 0; i < 3; i++) {
+        size[i] = 0;
     }
-    new_garage[size] = a;
-    delete[] garage;
-    garage = new_garage;
-    size++;
-};
+    garage = new Vehicle**[3];
+    garage[0] = new Vehicle*[0];
+    garage[1] = new Vehicle*[0];
+    garage[2] = new Vehicle*[0];
+}
 
-void Client::DeleteElement(int n)
-{
-    if (n <= size)
-    {
-        Vehicle* new_garage = new Vehicle [size - 1];
-        for (int i = 0; i != size; i++) {
-            if (i < n)
-            {
-                new_garage[i] = garage[i];
+int Client::GetSize() {
+    return size[0] + size[1] + size[2];
+}
+
+void Client::AddElement(Vehicle &a) {
+    int m = -1;
+    switch (a.GetType()) {
+        case 'e':
+            m = 0;
+            break;
+        case 's':
+            m = 1;
+            break;
+        case 'r':
+            m = 2;
+            break;
+        default:
+            std::cout << "[some problem occurred]" << std::endl;
+            return;
+    }
+    Vehicle** new_garage = new Vehicle*[size[m] + 1];
+    for (int i = 0; i < size[m]; i++) {
+        new_garage[i] = garage[m][i];
+    }
+    new_garage[size[m]] = &a;
+    delete[] garage[m];
+    garage[m] = new_garage;
+    size[m]++;
+    std::cout << "[element added]" << std::endl;
+}
+
+void Client::DeleteElement(int row, int element) {
+    if (row >= 0 && row < 3 && element >= 0 && element < size[row]) {
+        Vehicle** new_garage = new Vehicle*[size[row] - 1];
+        int newIndex = 0;
+        for (int i = 0; i < size[row]; i++) {
+            if (i != element) {
+                new_garage[newIndex] = garage[row][i];
+                newIndex++;
             }
-            if (i > n)
-            {
-                new_garage[i - 1] = garage[i];
-            }
-            
         }
-        delete[] garage;
-        garage = new_garage;
-        size --;
+        delete[] garage[row];
+        garage[row] = new_garage;
+        size[row]--;
+        std::cout << "[element deleted]" << std::endl;
+    } else {
+        std::cout << "[invalid row or element number - deleting hasn't proceed]" << std::endl;
     }
-    else
-    {
-        std::cout << "number is more than max elem\n";
-    }
-};
+}
 
-void Client::ShowElements()
-{
-    for (int i = 0; i != size; i++) {
-        std::cout << garage[i].GetBrand() << std::endl;
+void Client::ShowElements() {
+    std::cout << "--list of elements--"<<std::endl;
+    for (int i = 0; i < 3; i++) {
+        std::cout << i << ':' << std::endl;
+        for (int n = 0; n < size[i]; n++) {
+            std::cout << garage[i][n]->GetBrand() << ' ';
+        }
+        std::cout << std::endl;
     }
-};
+    std::cout << "--end of list--"<<std::endl;
+}
 
 void Client::Menu()
 {
@@ -86,7 +100,7 @@ void Client::Menu()
         std::cout << "7. Exit" << std::endl;
         if (!(std::cin >> x) || x > 7 || x < 1 )
         {
-            std::cout << "Incorrect. Try again" << std::endl;
+            std::cout << "[incorrect. try again]" << std::endl;
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
@@ -125,3 +139,4 @@ void Client::Menu()
     }
     std::cout << "Exit done" << std::endl;
 };
+
