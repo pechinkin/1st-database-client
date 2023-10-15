@@ -79,7 +79,7 @@ void Client::ShowElements() {
     for (int i = 0; i < 3; i++) {
         std::cout << i << ':' << std::endl;
         for (int n = 0; n < size[i]; n++) {
-            std::cout << garage[i][n]->GetBrand() << ' ';
+            std::cout << garage[i][n];
         }
         std::cout << std::endl;
     }

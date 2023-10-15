@@ -16,6 +16,8 @@ public:
     char GetGearbox() const;
     
 //    void WriteTo(std::ostream& output) override;
+    std::ostream& WriteTo(std::ostream& output) const override;
+    
     
     Car();
     Car(std::string b, std::string m, int v, std::string c, char g);
@@ -52,6 +54,12 @@ char Car::GetGearbox() const
 {
     return gearbox;
 };
+
+std::ostream& Car::WriteTo(std::ostream& output) const {
+    output << "Brand: " << GetBrand() << ", Model: " << GetModel() << ", Engine Volume: "
+    << engine_volume << ", Color: " << color << ", Gearbox: " << gearbox;
+    return output;
+}
 
 Car::Car(): Vehicle()
 {

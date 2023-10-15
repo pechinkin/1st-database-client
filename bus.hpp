@@ -17,6 +17,7 @@ public:
     std::string GetDestination() const;
     
 //    void WriteTo(std::ostream& output) override;
+    std::ostream& WriteTo(std::ostream& output) const override;
     
     Bus();
     Bus(std::string b, std::string m, int sit, int max, std::string d);
@@ -52,6 +53,12 @@ std::string Bus::GetDestination() const
 {
     return destination;
 };
+
+std::ostream& Bus::WriteTo(std::ostream& output) const {
+    output << "Brand: " << GetBrand() << ", Model: " << GetModel() << ", Sit. passangers: "
+    << sitting_pasangers << ", Max. passangers: " << max_passangers << ", Destination: " << destination;
+    return output;
+}
 
 Bus::Bus(): Vehicle()
 {

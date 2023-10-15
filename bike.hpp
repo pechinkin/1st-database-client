@@ -16,6 +16,7 @@ public:
     int GetLandscape() const;
     
 //    void WriteTo(std::ostream& output) override;
+    std::ostream& WriteTo(std::ostream& output) const override;
     
     Bike();
     Bike(std::string b, std::string m, int v, int p, int l);
@@ -51,6 +52,12 @@ int Bike::GetLandscape() const
 {
     return landscape;
 };
+
+std::ostream& Bike::WriteTo(std::ostream& output) const {
+    output << "Brand: " << GetBrand() << ", Model: " << GetModel() << ", Engine Volume: "
+    << engine_volume << ", Power: " << power << ", Landscape: " << landscape;
+    return output;
+}
 
 Bike::Bike(): Vehicle()
 {

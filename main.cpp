@@ -11,16 +11,18 @@
 int main()
 {
     Client cli;
-    Car r;
-    Bus s;
-    cli.AddElement(r);
-    cli.AddElement(s);
-    cli.AddElement(r);
-    cli.AddElement(s);
-    cli.ShowElements();
-    cli.DeleteElement(2, 0);
-    cli.ShowElements();
-    cli.DeleteElement(1, 0);
+    Bike bike;
+    Bus bus;
+    Car car;
+    bike.SetBrand("eb");
+    bike.SetModel("em");
+    bus.SetBrand("sb");
+    bus.SetModel("sm");
+    car.SetBrand("rb");
+    car.SetModel("rm");
+    cli.AddElement(bike);
+    cli.AddElement(bus);
+    cli.AddElement(car);
     cli.ShowElements();
     return 0;
 }
