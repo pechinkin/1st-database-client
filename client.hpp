@@ -4,11 +4,11 @@ private:
     int size[3];
 public:
     void AddElement(Vehicle &a);
-    void DeleteElement(int row, int element);
+    void DeleteElement();
     int GetSize();
 
     void RestoreFrom(std::ifstream& file_stream);
-    void ShowElements();
+    void WriteElementsTo(std::ostream& output);
     void Menu();
 
     Client();
@@ -55,35 +55,52 @@ void Client::AddElement(Vehicle &a) {
     std::cout << "[element added]" << std::endl;
 }
 
-void Client::DeleteElement(int row, int element) {
-    if (row >= 0 && row < 3 && element >= 0 && element < size[row]) {
-        Vehicle** new_garage = new Vehicle*[size[row] - 1];
-        int newIndex = 0;
-        for (int i = 0; i < size[row]; i++) {
-            if (i != element) {
-                new_garage[newIndex] = garage[row][i];
-                newIndex++;
-            }
-        }
-        delete[] garage[row];
-        garage[row] = new_garage;
-        size[row]--;
-        std::cout << "[element deleted]" << std::endl;
-    } else {
-        std::cout << "[invalid row or element number - deleting hasn't proceed]" << std::endl;
+void Client::DeleteElement() {
+    int row, element;
+    std::cout << "What vehicle do you want to delete? Bike - 0, Bike - 1, Car 2: ";
+    std::cin >> row;
+    if (!(row >= 0 && row <3)) {
+        std::cout << "[incorrect input]" << std::endl;
+        return;
     }
+    std::cout << ((row == 0)?"bikes":((row == 1)?"buses":"cars")) << ':' << std::endl;
+    for (int i = 0; i != size[row]; i++) {
+        std::cout << i << " - " << garage[row][i] << std::endl;
+    }
+    std::cout << "Which one do you want to delete?" << std::endl;
+    std::cin >> element;
+    if (!(element >= 0 && element < size[row])) {
+        std::cout << "[incorrect input]" << std::endl;
+        return;
+    }
+//finally trying to delete
+        if (row >= 0 && row < 3 && element >= 0 && element < size[row]) {
+            Vehicle** new_garage = new Vehicle*[size[row] - 1];
+            int newIndex = 0;
+            for (int i = 0; i < size[row]; i++) {
+                if (i != element) {
+                    new_garage[newIndex] = garage[row][i];
+                    newIndex++;
+                }
+            }
+            delete[] garage[row];
+            garage[row] = new_garage;
+            size[row]--;
+            std::cout << "[element deleted]" << std::endl;
+        }
+        else {
+            std::cout << "[invalid row or element number - deleting hasn't proceed]" << std::endl;
+        }
 }
 
-void Client::ShowElements() {
-    std::cout << "--list of elements--"<<std::endl;
+void Client::WriteElementsTo(std::ostream& output) {
     for (int i = 0; i < 3; i++) {
-        std::cout << i << ':' << std::endl;
+        output << ((i == 0)?"bike":((i == 1)?"bus":"car")) << ':' << std::endl;
         for (int n = 0; n < size[i]; n++) {
-            std::cout << garage[i][n];
+            output << garage[i][n] << std::endl;
         }
-        std::cout << std::endl;
+        output << std::endl;
     }
-    std::cout << "--end of list--"<<std::endl;
 }
 
 void Client::Menu()
@@ -112,9 +129,10 @@ void Client::Menu()
                     break;
                 case 2:
                     std::cout << ".2\n";
+                    DeleteElement();
                     break;
                 case 3:
-                    std::cout << ".3\n";
+                    WriteElementsTo(std::cout);
                     break;
                 case 4:
                     std::cout << ".4\n";
@@ -131,12 +149,12 @@ void Client::Menu()
             }
         }
     }
-    std::cout << "Exiting... Do you want to save to file?\n1 - yes, 2/other - no" << std::endl;
+    std::cout << "[exiting... Do you want to save to file?\n1 - yes, 2/other - no]" << std::endl;
     std::cin >> x;
     if (x == 1)
     {
-        std::cout << "Saving" << std::endl;
+        std::cout << "[saving..]" << std::endl;
     }
-    std::cout << "Exit done" << std::endl;
+    std::cout << "[exit done]" << std::endl;
 };
 
