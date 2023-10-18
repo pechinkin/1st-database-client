@@ -2,17 +2,17 @@ class Car : public Vehicle
 {
 private:
     int engine_volume;  //>0
-    std::string color;
+    int color;
     char gearbox;       //a - automatic, m - manual, r - robotized, с - continuously variable transmission
     
 public:
     void SetVolume(int v);
-    void SetColor(std::string c);
+    void SetColor(int c);
     void SetGearbox(char g);
     void SetType() override;
     
     int GetVolume() const;
-    std::string GetColor() const;
+    int GetColor() const;
     char GetGearbox() const;
     
 //    void WriteTo(std::ostream& output) override;
@@ -20,7 +20,7 @@ public:
     
     
     Car();
-    Car(std::string b, std::string m, int v, std::string c, char g);
+    Car(std::string b, std::string m, int v, int c, char g);
     Car(Car const &another);
 };
 
@@ -28,7 +28,7 @@ void Car::SetVolume(int v)
 {
     engine_volume = v;
 };
-void Car::SetColor(std::string c)
+void Car::SetColor(int c)
 {
     color = c;
 };
@@ -46,7 +46,7 @@ int Car::GetVolume() const
 {
     return engine_volume;
 };
-std::string Car::GetColor() const
+int Car::GetColor() const
 {
     return color;
 };
@@ -64,11 +64,11 @@ std::ostream& Car::WriteTo(std::ostream& output) const {
 Car::Car(): Vehicle()
 {
     engine_volume = 0;  //>0
-    color = "not set";
+    color = 0;
     gearbox = '-';
     SetType();
 };
-Car::Car(std::string b, std::string m, int v, std::string c, char g):
+Car::Car(std::string b, std::string m, int v, int c, char g):
 Vehicle(b, m), engine_volume{v}, color{c}, gearbox{g}
 {
     SetType();
