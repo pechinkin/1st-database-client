@@ -54,8 +54,8 @@ int Bike::GetLandscape() const
 };
 
 std::ostream& Bike::WriteTo(std::ostream& output) const {
-    output << "Brand: " << GetBrand() << ", Model: " << GetModel() << ", Engine Volume: "
-    << engine_volume << ", Power: " << power << ", Landscape: " << landscape;
+    output << "Brand:\n" << GetBrand() << "\nModel:\n" << GetModel() << "\nEngine Volume:\n"
+    << engine_volume << "\nPower:\n" << power << "\nLandscape:\n" << landscape;
     return output;
 }
 

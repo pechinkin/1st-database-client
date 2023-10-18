@@ -16,7 +16,6 @@ public:
     std::string GetModel() const;
     char GetType() const;
     
-//    virtual void WriteTo(std::ostream& output) = 0; //for different types it's going to be different output. can be done to file/concole/?other stream?
     friend std::ostream& operator<<(std::ostream& output, const Vehicle* vehicle);
     virtual std::ostream& WriteTo(std::ostream& output) const = 0;
     

@@ -1,0 +1,47 @@
+-bike:
+Brand:
+1
+Model:
+2
+Engine Volume:
+3
+Power:
+4
+Landscape:
+3
+
+-bus:
+Brand:
+1
+Model:
+1
+Sit. passangers:
+1
+Max. passangers:
+1
+Destination:
+1
+-bus:
+Brand:
+2
+Model:
+2
+Sit. passangers:
+2
+Max. passangers:
+2
+Destination:
+2
+
+-car:
+Brand:
+1
+Model:
+1
+Engine Volume:
+1
+Color:
+3
+Gearbox:
+a
+

@@ -56,8 +56,8 @@ char Car::GetGearbox() const
 };
 
 std::ostream& Car::WriteTo(std::ostream& output) const {
-    output << "Brand: " << GetBrand() << ", Model: " << GetModel() << ", Engine Volume: "
-    << engine_volume << ", Color: " << color << ", Gearbox: " << gearbox;
+    output << "Brand:\n" << GetBrand() << "\nModel:\n" << GetModel() << "\nEngine Volume:\n"
+    << engine_volume << "\nColor:\n" << color << "\nGearbox:\n" << gearbox;
     return output;
 }
 

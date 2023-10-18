@@ -55,8 +55,8 @@ std::string Bus::GetDestination() const
 };
 
 std::ostream& Bus::WriteTo(std::ostream& output) const {
-    output << "Brand: " << GetBrand() << ", Model: " << GetModel() << ", Sit. passangers: "
-    << sitting_pasangers << ", Max. passangers: " << max_passangers << ", Destination: " << destination;
+    output << "Brand:\n" << GetBrand() << "\nModel:\n" << GetModel() << "\nSit. passangers:\n"
+    << sitting_pasangers << "\nMax. passangers:\n" << max_passangers << "\nDestination:\n" << destination;
     return output;
 }
 
