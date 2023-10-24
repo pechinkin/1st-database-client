@@ -1,10 +1,13 @@
+//  #ifndef CLIENT_H - это нужно от двойного включения данного ашника
+//  #define CLIENT_H
+
 class Client {
 private:
-Vehicle*** garage = nullptr;
-int size[3];
+Vehicle*** garage = nullptr; // KK: it is bad way to readable, will be better: using GargeArray = Vehicle***
+int size[3]; // MM: magic number, will be better: #define COUNT_STH 3
 
 public:
-    void AddElement(Vehicle* a);
+    void AddElement(Vehicle* a); // KK: a - bad name
     void AddVehicleFromConsole();
     void DeleteElement();
     void CopyElement();
@@ -19,22 +22,43 @@ public:
 };
 
 Client::Client() {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) { // i - bad name 
         size[i] = 0;
     }
     garage = new Vehicle**[3];
-    garage[0] = new Vehicle*[0];
-    garage[1] = new Vehicle*[0];
-    garage[2] = new Vehicle*[0];
+    garage[0] = new Vehicle*[0]; // MM: Why allocate in such way?
+    garage[1] = new Vehicle*[0]; // if you wanted to allocate a pointer
+    garage[2] = new Vehicle*[0]; // you could just write: new Vehicle*;
 }
 
 int Client::GetSize() {
-return size[0] + size[1] + size[2];
+return size[0] + size[1] + size[2]; // if you use tab - use it in every functions
 }
 
-void Client::AddElement(Vehicle *a) {
-    int m = -1;
-    switch (a->GetType()) {
+/*
+    MM: The system is not flexible. I mean when you
+    want to change size of garage to 4 you need to find all '3'
+    in your code and replace them with '4'. This process is error-prone
+    and take time.
+
+    It's better to operate with variable or constant like "garageSize".
+*/
+
+// MM: Name doesn't give any information about object.
+// 
+void Client::AddElement(Vehicle *a) { // element - bad name
+
+    
+    /*
+        MM: Now your type variable ('m') can get any value
+        like 17 or -99. It's error-prone.
+
+        It's better to use more limited type like enum.
+        It can get only values that belong to enum.
+    */
+
+    int m = -1; // m - bad name
+    switch (a->GetType()) { // it will be better create enum class for types 
         case 'e':
             m = 0;
             break;
@@ -45,11 +69,14 @@ void Client::AddElement(Vehicle *a) {
             m = 2;
             break;
         default:
-            std::cout << "[some problem occurred]" << std::endl;
+            std::cout << "[some problem occurred]" << std::endl; // use throw std::logic_error("[some ...]")
             return;
     }
-    Vehicle** new_garage = new Vehicle*[size[m] + 1];
-    for (int i = 0; i < size[m]; i++) {
+
+    // MM: Why function AddElement allocates new_garage?
+    // One function - one responsibility
+    Vehicle** new_garage = new Vehicle*[size[m] + 1]; // MM: Why allocate size+1? Why not just size?
+    for (int i = 0; i < size[m]; i++) { // i - bad name
         new_garage[i] = garage[m][i];
     }
     new_garage[size[m]] = a;
@@ -64,11 +91,21 @@ void Client::AddVehicleFromConsole() {
     std::string brand, model, destination;
     int type, volume, power, landscape, color, sit_pas, max_pas;
     char gearbox;
+    // MM: ^---- uninitialized variables:
+    // google what kind of error it causes
 
     std::cout << "What vehicle do you want to add? Bike - 0, Bus - 1, Car - 2: ";
     std::cin >> type;
     std::cin.ignore(); // Ignore the newline character
 
+    /*
+        MM: AWFUL COPYPASTE!!!!
+
+        Copypaste is error-prone and unflexible.
+        If you need to do some action multiple times - create function:
+
+        like: getProperty(...) etc 
+    */
     switch (type) {
         case 0:
             std::cout << "Enter a brand: ";
@@ -183,9 +220,14 @@ void Client::DeleteElement() {
     std::cout << "What vehicle do you want to delete? Bike - 0, Bus - 1, Car 2: ";
     std::cin >> row;
     if (!(row >= 0 && row <3)) {
+        // MM: If you type error it's better to print more
+        // information about this error to fix it quicker.
+        // Like print input that you considered incorrect
         std::cout << "[incorrect input]" << std::endl;
         return;
     }
+
+    // MM: It's unreadable. Try to make one action in a line
     std::cout << ((row == 0)?"bikes":((row == 1)?"buses":"cars")) << ':' << std::endl;
     for (int i = 0; i != size[row]; i++) {
         std::cout << '#' << i << " - " << garage[row][i] << std::endl;
@@ -253,6 +295,10 @@ void Client::RestoreFrom(std::fstream& file_stream) {
         if (line == "-bike:") {
             std::string brand, model;
             int engineVolume, power, landscape;
+
+
+            // MM: Do u really need so much nested 'ifs'?
+            // Copypaste in reading and matching line
             if ((std::getline(file_stream, line)) && (line == "Brand:")) {
                 std::getline(file_stream, brand);
                 if ((std::getline(file_stream, line)) && (line == "Model:")) {
@@ -346,7 +392,7 @@ void Client::RestoreFrom(std::fstream& file_stream) {
 
 void Client::Menu()
 {
-    std::fstream file("file.txt", std::ios::in | std::ios::out);
+    std::fstream file("file.txt", std::ios::in | std::ios::out); // MM: check for correct open?
     int x = 0;
     while (x != 7)
     {
@@ -421,3 +467,4 @@ void Client::Menu()
     std::cout << "[exit done]" << std::endl;
 };
 
+// #endif - можешь попробовать без этого, напиши ответным письмом что будет
