@@ -3,37 +3,37 @@
 
 class Client {
 private:
-Vehicle*** garage = nullptr; // KK: it is bad way to readable, will be better: using GargeArray = Vehicle***
+    Vehicle*** garage = nullptr; // KK: it is bad way to readable, will be better: using GargeArray = Vehicle***
 int size[3]; // MM: magic number, will be better: #define COUNT_STH 3
 
 public:
-void AddElement(Vehicle* a); // KK: a - bad name
-void AddVehicleFromConsole();
-void DeleteElement();
-void CopyElement();
-void ChangeElement();
-int GetSize();
+    void AddElement(Vehicle* a); // KK: a - bad name
+    void AddVehicleFromConsole();
+    void DeleteElement();
+    void CopyElement();
+    void ChangeElement();
+    int GetSize();
 
-void RestoreFrom(std::fstream& file_stream);
-void WriteElementsTo(std::ostream& output);
-void WriteToFile(std::fstream& file_stream);
-void Menu();
+    void RestoreFrom(std::fstream& file_stream);
+    void WriteElementsTo(std::ostream& output);
+    void WriteToFile(std::fstream& file_stream);
+    void Menu();
 
-Client();
+    Client();
 };
 
 Client::Client() {
-for (int i = 0; i < 3; i++) { // i - bad name 
-    size[i] = 0;
-}
-garage = new Vehicle**[3];
-garage[0] = new Vehicle*[0]; // MM: Why allocate in such way?
-garage[1] = new Vehicle*[0]; // if you wanted to allocate a pointer
-garage[2] = new Vehicle*[0]; // you could just write: new Vehicle*;
-}
+    for (int i = 0; i < 3; i++) { // i - bad name
+        size[i] = 0;
+    }
+    garage = new Vehicle**[3];
+    garage[0] = new Vehicle*[0]; // MM: Why allocate in such way?
+    garage[1] = new Vehicle*[0]; // if you wanted to allocate a pointer
+    garage[2] = new Vehicle*[0]; // you could just write: new Vehicle*;
+    }
 
-int Client::GetSize() {
-return size[0] + size[1] + size[2]; // if you use tab - use it in every functions
+    int Client::GetSize() {
+    return size[0] + size[1] + size[2]; // if you use tab - use it in every functions
 }
 
 /*
@@ -58,46 +58,46 @@ void Client::AddElement(Vehicle *a) { // element - bad name
     It can get only values that belong to enum.
 */
 
-int m = -1; // m - bad name
-switch (a->GetType()) { // it will be better create enum class for types 
-    case 'e':
-        m = 0;
-        break;
-    case 's':
-        m = 1;
-        break;
-    case 'r':
-        m = 2;
-        break;
-    default:
-        std::cout << "[some problem occurred]" << std::endl; // use throw std::logic_error("[some ...]")
-        return;
-}
+    int m = -1; // m - bad name
+    switch (a->GetType()) { // it will be better create enum class for types
+        case 'e':
+            m = 0;
+            break;
+        case 's':
+            m = 1;
+            break;
+        case 'r':
+            m = 2;
+            break;
+        default:
+            std::cout << "[some problem occurred]" << std::endl; // use throw std::logic_error("[some ...]")
+            return;
+    }
 
 // MM: Why function AddElement allocates new_garage?
 // One function - one responsibility
-Vehicle** new_garage = new Vehicle*[size[m] + 1]; // MM: Why allocate size+1? Why not just size?
-for (int i = 0; i < size[m]; i++) { // i - bad name
-    new_garage[i] = garage[m][i];
-}
-new_garage[size[m]] = a;
-delete[] garage[m];
-garage[m] = new_garage;
-size[m]++;
-std::cout << "[element added]" << std::endl;
+    Vehicle** new_garage = new Vehicle*[size[m] + 1]; // MM: Why allocate size+1? Why not just size?
+    for (int i = 0; i < size[m]; i++) { // i - bad name
+        new_garage[i] = garage[m][i];
+    }
+    new_garage[size[m]] = a;
+    delete[] garage[m];
+    garage[m] = new_garage;
+    size[m]++;
+    std::cout << "[element added]" << std::endl;
 }
 
 
 void Client::AddVehicleFromConsole() {
-std::string brand, model, destination;
-int type, volume, power, landscape, color, sit_pas, max_pas;
-char gearbox;
-// MM: ^---- uninitialized variables:
-// google what kind of error it causes
+    std::string brand, model, destination;
+    int type, volume, power, landscape, color, sit_pas, max_pas;
+    char gearbox;
+    // MM: ^---- uninitialized variables:
+    // google what kind of error it causes
 
-std::cout << "What vehicle do you want to add? Bike - 0, Bus - 1, Car - 2: ";
-std::cin >> type;
-std::cin.ignore(); // Ignore the newline character
+    std::cout << "What vehicle do you want to add? Bike - 0, Bus - 1, Car - 2: ";
+    std::cin >> type;
+    std::cin.ignore(); // Ignore the newline character
 
 /*
     MM: AWFUL COPYPASTE!!!!
@@ -107,155 +107,132 @@ std::cin.ignore(); // Ignore the newline character
 
     like: getProperty(...) etc 
 */
-switch (type) {
-    case 0:
-        std::cout << "Enter a brand: ";
-        std::getline(std::cin, brand);
-        if (brand.empty()) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Enter a model: ";
-        std::getline(std::cin, model);
-        if (model.empty()) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Enter a volume: ";
-        if (!(std::cin >> volume) || volume <= 0) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Enter a power: ";
-        if (!(std::cin >> power) || power <= 0) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Landscapes: 1/2/3\nEnter a landscape: ";
-        if (!(std::cin >> landscape) || landscape < 1 || landscape > 3) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
+    switch (type) {
+        case 0:
+            std::cout << "Enter a brand: ";
+            std::getline(std::cin, brand);
+            if (brand.empty()) 
+                throw std::logic_error("invalid brand");
+            
+            std::cout << "Enter a model: ";
+            std::getline(std::cin, model);
+            if (model.empty()) 
+                throw std::logic_error("invalid model");
+            
+            std::cout << "Enter a volume: ";
+            if (!(std::cin >> volume) || volume <= 0) 
+                throw std::logic_error("invalid volume");
 
-        AddElement(new Bike(brand, model, volume, power, landscape));
-        break;
+            std::cout << "Enter a power: ";
+            if (!(std::cin >> power) || power <= 0) {
+                throw std::logic_error("invalid power");
+            }
+            
+            std::cout << "Landscapes: 1/2/3\nEnter a landscape: ";
+            if (!(std::cin >> landscape) || landscape < 1 || landscape > 3)
+                throw std::logic_error("invalid landscape");
+                
+            AddElement(new Bike(brand, model, volume, power, landscape));
+            break;
 
-    case 1:
-        std::cout << "Enter a brand: ";
-        std::getline(std::cin, brand);
-        if (brand.empty()) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Enter a model: ";
-        std::getline(std::cin, model);
-        if (model.empty()) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Enter a num of sit. pas: ";
-        if (!(std::cin >> sit_pas) || sit_pas < 0) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Enter a num of max. pas: ";
-        if (!(std::cin >> max_pas) || max_pas < 0 || sit_pas > max_pas) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Enter a destination: ";
-        std::cin.ignore();
-        std::getline(std::cin, destination);
-        if (destination.empty()) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
+        case 1:
+            std::cout << "Enter a brand: ";
+            std::getline(std::cin, brand);
+            if (brand.empty())
+                throw std::logic_error("invalid brand");
+            
+            std::cout << "Enter a model: ";
+            std::getline(std::cin, model);
+            if (model.empty())
+                throw std::logic_error("invalid model");
+                        
+            std::cout << "Enter a num of sit. pas: ";
+            if (!(std::cin >> sit_pas) || sit_pas < 0)
+                throw std::logic_error("invalid num of sit pas");
+                        
+            std::cout << "Enter a num of max. pas: ";
+            if (!(std::cin >> max_pas) || max_pas < 0 || sit_pas > max_pas)
+                throw std::logic_error("invalid num of sit pas");
+            
+            std::cout << "Enter a destination: ";
+            std::cin.ignore();
+            std::getline(std::cin, destination);
+            if (destination.empty()) 
+                throw std::logic_error("invalid brand");
 
-        AddElement(new Bus(brand, model, sit_pas, max_pas, destination));
-        break;
+            AddElement(new Bus(brand, model, sit_pas, max_pas, destination));
+            break;
 
-    case 2:
-        std::cout << "Enter a brand: ";
-        std::getline(std::cin, brand);
-        if (brand.empty()) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Enter a model: ";
-        std::getline(std::cin, model);
-        if (model.empty()) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Enter a volume: ";
-        if (!(std::cin >> volume) || volume <= 0) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Enter a color[1red, 2blue, 3green, 4black, 5white, 6yellow]: ";
-        if (!(std::cin >> color) || color < 1 ||color > 6) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        std::cout << "Enter a gearbox[a/m/r/c]: ";
-        if (!(std::cin >> gearbox)) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
-        if ((gearbox != 'a') && (gearbox != 'm') && (gearbox != 'r') && (gearbox != 'c')) {
-            std::cout << "[invalid input]" << std::endl;
-            return;
-        }
+        case 2:
+            std::cout << "Enter a brand: ";
+            std::getline(std::cin, brand);
+            if (brand.empty())
+                throw std::logic_error("invalid brand");
 
-        AddElement(new Car(brand, model, volume, color, gearbox));
-        break;
+            std::cout << "Enter a model: ";
+            std::getline(std::cin, model);
+            if (model.empty())
+                throw std::logic_error("invalid model");
+            
+            std::cout << "Enter a volume: ";
+            if (!(std::cin >> volume) || volume <= 0)
+                throw std::logic_error("invalid volume");
 
-    default:
-        std::cout << "[invalid input]" << std::endl;
-        break;
-}
+            std::cout << "Enter a color[1red, 2blue, 3green, 4black, 5white, 6yellow]: ";
+            if (!(std::cin >> color) || color < 1 ||color > 6)
+                throw std::logic_error("invalid color");
+
+            std::cout << "Enter a gearbox[a/m/r/c]: ";
+            if (!(std::cin >> gearbox) && (gearbox != 'a') && (gearbox != 'm') && (gearbox != 'r') && (gearbox != 'c'))
+                throw std::logic_error("invalid brand");
+
+            AddElement(new Car(brand, model, volume, color, gearbox));
+            break;
+
+        default:
+            throw std::logic_error("invalid vehicle");
+            break;
+    }
 }
 
 void Client::DeleteElement() {
-int row, element;
-std::cout << "What vehicle do you want to delete? Bike - 0, Bus - 1, Car 2: ";
-std::cin >> row;
-if (!(row >= 0 && row <3)) {
-    // MM: If you type error it's better to print more
-    // information about this error to fix it quicker.
-    // Like print input that you considered incorrect
-    std::cout << "[incorrect input]" << std::endl;
-    return;
-}
+    int row, element;
+    std::cout << "What vehicle do you want to delete? Bike - 0, Bus - 1, Car 2: ";
+    std::cin >> row;
+    if (!(row >= 0 && row <3)) {
+        // MM: If you type error it's better to print more
+        // information about this error to fix it quicker.
+        // Like print input that you considered incorrect
+        throw std::logic_error("invalid row");
+    }
 
-// MM: It's unreadable. Try to make one action in a line
-std::cout << ((row == 0)?"bikes":((row == 1)?"buses":"cars")) << ':' << std::endl;
-for (int i = 0; i != size[row]; i++) {
-    std::cout << '#' << i << " - " << garage[row][i] << std::endl;
-}
-std::cout << "Which one do you want to delete?" << std::endl;
-std::cin >> element;
-if (!(element >= 0 && element < size[row])) {
-    std::cout << "[incorrect input]" << std::endl;
-    return;
-}
-    if (row >= 0 && row < 3 && element >= 0 && element < size[row]) {
-        Vehicle** new_garage = new Vehicle*[size[row] - 1];
-        int newIndex = 0;
-        for (int i = 0; i < size[row]; i++) {
-            if (i != element) {
-                new_garage[newIndex] = garage[row][i];
-                newIndex++;
-            }
+    // MM: It's unreadable. Try to make one action in a line
+    if (size[row] == 0)
+        throw std::logic_error("no elements of this type");
+    
+    std::cout << ((row == 0)?"bikes":((row == 1)?"buses":"cars")) << ':' << std::endl;
+    for (int i = 0; i != size[row]; i++) {
+        std::cout << '#' << i << " - " << garage[row][i] << std::endl;
+    }
+    
+    std::cout << "Which one do you want to delete?" << std::endl;
+    std::cin >> element;
+    if (!(element >= 0 && element < size[row]))
+        throw std::logic_error("invalid num of element");
+
+    Vehicle** new_garage = new Vehicle*[size[row] - 1];
+    int newIndex = 0;
+    for (int i = 0; i < size[row]; i++) {
+        if (i != element) {
+            new_garage[newIndex] = garage[row][i];
+            newIndex++;
         }
-        delete[] garage[row];
-        garage[row] = new_garage;
-        size[row]--;
-        std::cout << "[element deleted]" << std::endl;
     }
-    else {
-        std::cout << "[invalid row or element number - deleting hasn't proceed]" << std::endl;
-    }
+    delete[] garage[row];
+    garage[row] = new_garage;
+    size[row]--;
+    std::cout << "[element deleted]" << std::endl;
+
 }
 
 void Client::CopyElement()
@@ -263,20 +240,22 @@ void Client::CopyElement()
     int row, element;
     std::cout << "What vehicle do you want to copy? Bike - 0, Bus - 1, Car 2: ";
     std::cin >> row;
-    if (!(row >= 0 && row <3)) {
-        std::cout << "[incorrect input]" << std::endl;
-        return;
-    }
+    if (!(row >= 0 && row <3))
+        throw std::logic_error("invalid row");
+    
+    if (size[row] == 0)
+        throw std::logic_error("no elements of this type");
+    
     std::cout << ((row == 0)?"bikes":((row == 1)?"buses":"cars")) << ':' << std::endl;
     for (int i = 0; i != size[row]; i++) {
         std::cout << i << " - " << garage[row][i] << std::endl;
     }
     std::cout << "Which one do you want to copy?" << std::endl;
     std::cin >> element;
-    if (!(element >= 0 && element < size[row])) {
-        std::cout << "[incorrect input]" << std::endl;
-        return;
-    }
+    if (!(element >= 0 && element < size[row]))
+        throw std::logic_error("invalid num of elem");
+    
+    
     AddElement(garage[row][element]);
 };
 
@@ -289,18 +268,21 @@ void Client::ChangeElement() {
 
     std::cout << "What vehicle do you want to change? Bike - 0, Bus - 1, Car - 2: ";
     std::cin >> type;
-
+    
+    if (size[type] == 0)
+        throw std::logic_error("no elements of this type");
+  
     std::cin.ignore(); // Ignore the newline character
         std::cout << ((type == 0)?"bikes":((type == 1)?"buses":"cars")) << ':' << std::endl;
     for (int i = 0; i != size[type]; i++) {
         std::cout << i << " - " << garage[type][i] << std::endl;
     }
+    
     std::cout << "Which one do you want to change?" << std::endl;
     std::cin >> element;
-    if (!(element >= 0 && element < size[type])) {
-        std::cout << "[incorrect input]" << std::endl;
-        return;
-    }
+    if (!(element >= 0 && element < size[type]))
+        throw std::logic_error("invalid num of element");
+  
     /*
         MM: AWFUL COPYPASTE!!!!
 
@@ -318,47 +300,42 @@ void Client::ChangeElement() {
                 case 0:
                     std::cout << "Enter a brand: ";
                     std::getline(std::cin, brand);
-                    if (brand.empty()) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
+                    if (brand.empty()) 
+                        throw std::logic_error("no input");
                     garage[type][element]->SetBrand(brand);
                     break;
+                    
                 case 1:
                     std::cout << "Enter a model: ";
                     std::getline(std::cin, model);
-                    if (model.empty()) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
+                    if (model.empty())
+                        throw std::logic_error("no input");
                     garage[type][element]->SetModel(model);
                     break;
+                    
                 case 2:
                     std::cout << "Enter a volume: ";
-                    if (!(std::cin >> volume) || volume <= 0) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }      
-                    static_cast<Bike*>(garage[type][element])->SetVolume(volume);               
+                    if (!(std::cin >> volume) || volume <= 0)
+                        throw std::logic_error("invalid volume");
+                    static_cast<Bike*>(garage[type][element])->SetVolume(volume);
                     break;
+                    
                 case 3:
                     std::cout << "Enter a power: ";
-                    if (!(std::cin >> power) || power <= 0) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }     
-                    static_cast<Bike*>(garage[type][element])->SetPower(power);           
+                    if (!(std::cin >> power) || power <= 0)
+                        throw std::logic_error("invalid power");
+                    static_cast<Bike*>(garage[type][element])->SetPower(power);
                     break;
+                    
                 case 4:
                     std::cout << "Landscapes: 1/2/3\nEnter a landscape: ";
-                    if (!(std::cin >> landscape) || landscape < 1 || landscape > 3) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
+                    if (!(std::cin >> landscape) || landscape < 1 || landscape > 3)
+                        throw std::logic_error("invalid volumde");
                     static_cast<Bike*>(garage[type][element])->SetLandscape(landscape);
-                    break;                                      
+                    break;
+                
                 default:
-                    std::cout << "[invalid param]" << std::endl;
+                    throw std::logic_error("invalid num of param");
                     break;
             }
 
@@ -374,49 +351,44 @@ void Client::ChangeElement() {
                 case 0:
                     std::cout << "Enter a brand: ";
                     std::getline(std::cin, brand);
-                    if (brand.empty()) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
+                    if (brand.empty())
+                        throw std::logic_error("invalid brand");
                     garage[type][element]->SetBrand(brand);
                     break;
+                    
                 case 1:
                     std::cout << "Enter a model: ";
                     std::getline(std::cin, model);
-                    if (model.empty()) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
+                    if (model.empty())
+                        throw std::logic_error("invalid model");
                     garage[type][element]->SetModel(model);
                     break;
+                    
                 case 2:
                     std::cout << "Enter a num of sit. pas: ";
-                    if (!(std::cin >> sit_pas) || sit_pas < 0) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
-                    static_cast<Bus*>(garage[type][element])->SetSittingPas(sit_pas); 
+                    if (!(std::cin >> sit_pas) || sit_pas < 0)
+                        throw std::logic_error("invalid num of sit. pas");
+                    static_cast<Bus*>(garage[type][element])->SetSittingPas(sit_pas);
                     break;
+                    
                 case 3:
                     std::cout << "Enter a num of max. pas: ";
-                    if (!(std::cin >> max_pas) || max_pas < 0 || sit_pas > max_pas) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }      
-                    static_cast<Bus*>(garage[type][element])->SetMaxPas(max_pas); 
+                    if (!(std::cin >> max_pas) || max_pas < 0 || sit_pas > max_pas)
+                        throw std::logic_error("invalid num of max. pas");
+                    static_cast<Bus*>(garage[type][element])->SetMaxPas(max_pas);
                     break;
+                    
                 case 4:
                     std::cout << "Enter a destination: ";
                     std::cin.ignore();
                     std::getline(std::cin, destination);
-                    if (destination.empty()) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
-                    static_cast<Bus*>(garage[type][element])->SetDestination(destination); 
-                    break;                                      
+                    if (destination.empty())
+                        throw std::logic_error("invalid destination");
+                    static_cast<Bus*>(garage[type][element])->SetDestination(destination);
+                    break;     
+                    
                 default:
-                    std::cout << "[invalid param]" << std::endl;
+                    throw std::logic_error("invalid param");
                     break;
 
 
@@ -431,57 +403,47 @@ void Client::ChangeElement() {
                 case 0:
                     std::cout << "Enter a brand: ";
                     std::getline(std::cin, brand);
-                    if (brand.empty()) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
+                    if (brand.empty())
+                        throw std::logic_error("invalid brand");
                     garage[type][element]->SetBrand(brand);
                     break;
+                    
                 case 1:
                     std::cout << "Enter a model: ";
                     std::getline(std::cin, model);
-                    if (model.empty()) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
+                    if (model.empty())
+                        throw std::logic_error("invalid model");
                     garage[type][element]->SetModel(model);
                     break;
+                    
                 case 2:
                     std::cout << "Enter a volume: ";
-                    if (!(std::cin >> volume) || volume <= 0) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }     
-                    static_cast<Car*>(garage[type][element])->SetVolume(volume);           
+                    if (!(std::cin >> volume) || volume <= 0)
+                        throw std::logic_error("invalid volume");
+                    static_cast<Car*>(garage[type][element])->SetVolume(volume);
                     break;
+                    
                 case 3:
                     std::cout << "Enter a color[1red, 2blue, 3green, 4black, 5white, 6yellow]: ";
-                    if (!(std::cin >> color) || color < 1 ||color > 6) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
+                    if (!(std::cin >> color) || color < 1 ||color > 6)
+                        throw std::logic_error("invalid color");
                     static_cast<Car*>(garage[type][element])->SetColor(color);
                     break;
+                    
                 case 4:
                     std::cout << "Enter a gearbox[a/m/r/c]: ";
-                    if (!(std::cin >> gearbox)) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
-                    if ((gearbox != 'a') && (gearbox != 'm') && (gearbox != 'r') && (gearbox != 'c')) {
-                        std::cout << "[invalid input]" << std::endl;
-                        return;
-                    }
+                    if (!(std::cin >> gearbox) && (gearbox != 'a') && (gearbox != 'm') && (gearbox != 'r') && (gearbox != 'c'))
+                        throw std::logic_error("invalid gearbox");
                     static_cast<Car*>(garage[type][element])->SetGearbox(gearbox);
                     break;                                      
                 default:
-                    std::cout << "[invalid param]" << std::endl;
+                        throw std::logic_error("invalid param");
                     break;
             }        
             break;
 
         default:
-            std::cout << "[invalid input]" << std::endl;
+            throw std::logic_error("invalid type of vehicle");
             break;
     }
 };
@@ -621,46 +583,48 @@ void Client::Menu()
         }
         else
         {
-            switch (x) {
-                case 1:
-                    AddVehicleFromConsole();
-                    break;
-                case 2:
-                    DeleteElement();
-                    break;
-                case 3:
-                    WriteElementsTo(std::cout);
-                    break;
-                case 4:
-                    CopyElement();
-                    break;
-                case 5:
-                    ChangeElement();
-                    break;
-                case 6:
-                {
-                    if (file1.is_open())
+            try{
+                switch (x) {
+                    case 1:
+                        AddVehicleFromConsole();
+                        break;
+                    case 2:
+                        DeleteElement();
+                        break;
+                    case 3:
+                        WriteElementsTo(std::cout);
+                        break;
+                    case 4:
+                        CopyElement();
+                        break;
+                    case 5:
+                        ChangeElement();
+                        break;
+                    case 6:
                     {
-                        file1.seekp(0);
-                        WriteElementsTo(file1);
-                        std::cout << "[data saved to file1.txt - 6]" << std::endl;
+                        if (file1.is_open())
+                        {
+                            file1.seekp(0);
+                            WriteElementsTo(file1);
+                            std::cout << "[data saved to file1.txt - 6]" << std::endl;
+                        }
+                        else
+                            throw std::logic_error("unable to open a file");
                     }
-                    else
-                    {
-                        std::cout << "[unable to save]" << std::endl;
-                    }
+                        break;
+                    case 7:
+                        RestoreFrom(file);
+                        std::cout << "[restored]" << std::endl;
+                        break;
+                        
+                    default:
+                        break;
                 }
-                    break;
-                case 7:
-                    RestoreFrom(file);
-                    std::cout << "[restored]" << std::endl;
-                    break;
-                    
-                default:
-                    break;
             }
+            catch (const std::logic_error& ex) {std::cout << "Logic_error: " << ex.what() << std::endl;}
         }
     }
+    
     std::cout << "[exiting... Do you want to save to file?\n1 - yes, 2/other - no]" << std::endl;
     std::cin >> x;
     if (x == 1)
